@@ -1,5 +1,5 @@
 {
-    "extends": "zardoy/react",
+    "extends": "zardoy/src/react",
     "plugins": ["react", "react-hooks"],
     "rules": {}
 }

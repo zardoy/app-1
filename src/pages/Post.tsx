@@ -17,7 +17,7 @@ const Post: React.FC = () => {
         <div>
             <h2>{post.title}</h2>
             {inEditMode ? (
-                <textarea className="border" onChange={e => setEditingContent(e.target.value)} value={editingContent}></textarea>
+                <textarea className="border" value={editingContent} onChange={e => setEditingContent(e.target.value)} />
             ) : (
                 <section className="border">{post.content}</section>
             )}

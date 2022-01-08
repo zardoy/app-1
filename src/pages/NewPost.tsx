@@ -1,9 +1,7 @@
 import React from 'react'
 
-const NewPost: React.FC = () => {
-    return <div >
+const NewPost: React.FC = () => <div >
     <h1 className="">New Post</h1>
     </div>
-}
 
 export default NewPost
