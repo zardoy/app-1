@@ -6,6 +6,7 @@ import Posts from './pages/Posts'
 import Layout from './components/Layout'
 import Post from './pages/Post'
 import PostsLayout from './components/PostsLayout'
+import NewPost from './pages/NewPost'
 
 const App: React.FC = () => (
     <Provider store={store}>
@@ -16,6 +17,7 @@ const App: React.FC = () => (
                         <Route index element={<Posts />} />
                         <Route path=":postId" element={<Post />} />
                     </Route>
+                    <Route path="newPost" element={<NewPost />} />
                     <Route path="/" element={<Navigate to="posts" />} />
                 </Route>
             </Routes>
