@@ -2,11 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DefaultRootState } from 'react-redux'
 import { getNotifications } from '../../api/notifications'
 
-export const fetchNotifications = createAsyncThunk('notifications', (_, { getState }) => {
-    const state = getState() as DefaultRootState
-    const notifications = selectAllNotifications(getState as any)
-    return getNotifications(state.posts.posts)
-})
+export const fetchNotifications = createAsyncThunk('notifications', () => getNotifications())
 
 type Notification = ReturnType<typeof getNotifications>[0]
 

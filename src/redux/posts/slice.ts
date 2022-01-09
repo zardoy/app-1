@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { getPosts, addPost as addPostApi } from '../../api/posts'
+import { fetchPosts as fetchPostsApi, addPost as addPostApi } from '../../api/posts'
 
-export type Post = Awaited<ReturnType<typeof getPosts>>[number]
+export type Post = Awaited<ReturnType<typeof fetchPosts>>[number]
 
 export const postsSlice = createSlice({
     name: 'posts',
@@ -36,6 +36,6 @@ export const postsSlice = createSlice({
     },
 })
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => getPosts())
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => fetchPostsApi())
 
 export const addPost = createAsyncThunk('posts/addPost', async (data: Parameters<typeof addPostApi>[0]) => addPostApi(data))

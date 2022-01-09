@@ -1,8 +1,10 @@
 import { nanoid } from '@reduxjs/toolkit'
 import faker from 'faker'
-import { Post } from '../redux/posts/slice'
+import { getPosts } from './posts'
 
-export const getNotifications = (posts: Post[]) => {
+export const getNotifications = () => {
+    const posts = getPosts()
+
     const pastDate = new Date()
     pastDate.setMinutes(pastDate.getMinutes() - 15)
 
@@ -17,6 +19,7 @@ export const getNotifications = (posts: Post[]) => {
             date: faker.date.between(pastDate, new Date()).toISOString(),
             linkedPostId: post.id,
             message,
+            postLinkRange: [message.length - post.title.length, message.length] as [number, number],
         }
     })
 }

@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { formatDistanceToNow } from 'date-fns'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { fetchNotifications, notificationSlice, selectAllNotifications } from '../redux/notifications/slice'
 import { useAppDispatch } from '../redux/store'
 
@@ -10,19 +11,20 @@ const NotificationsList: React.FC = () => {
     const dispatch = useAppDispatch()
     const content =
         notifications.length > 0 ? (
-            notifications.map(({ date, id, message, isRead }) => (
+            notifications.map(({ date, id, message, isRead, linkedPostId, postLinkRange }) => (
                 <div
                     key={id}
-                    className={classNames({
-                        border: true,
+                    className={classNames('border', {
                         'bg-white cursor-pointer': !isRead,
                         'bg-gray-200': isRead,
                     })}
+                    title={isRead ? undefined : 'Click to mark notification as read'}
                     onClick={() => {
                         dispatch(notificationSlice.actions.readNotification({ id }))
                     }}
                 >
-                    {message}
+                    {message.slice(0, postLinkRange[0])}
+                    <Link to={`/posts/${linkedPostId}`}>{message.slice(postLinkRange[0], postLinkRange[1])}</Link>
                     <p className="mt-3 italic">{formatDistanceToNow(new Date(date), { addSuffix: true })}</p>
                 </div>
             ))
