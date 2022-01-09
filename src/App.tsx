@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import Post from './pages/Post'
 import PostsLayout from './components/PostsLayout'
 import NewPost from './pages/NewPost'
+import NotificationsList from './pages/NotificationsList'
 
 const App: React.FC = () => (
     <Provider store={store}>
@@ -18,6 +19,7 @@ const App: React.FC = () => (
                         <Route path=":postId" element={<Post />} />
                     </Route>
                     <Route path="newPost" element={<NewPost />} />
+                    <Route path="notifications" element={<NotificationsList />} />
                     <Route path="/" element={<Navigate to="posts" />} />
                 </Route>
             </Routes>

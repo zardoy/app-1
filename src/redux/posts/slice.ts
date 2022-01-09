@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
-import { getPosts } from '../../api/api'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { getPosts, addPost as addPostApi } from '../../api/posts'
 
-type Post = Awaited<ReturnType<typeof getPosts>>[number]
+export type Post = Awaited<ReturnType<typeof getPosts>>[number]
 
 export const postsSlice = createSlice({
     name: 'posts',
@@ -11,21 +11,6 @@ export const postsSlice = createSlice({
         error: undefined as string | undefined,
     },
     reducers: {
-        addPost: {
-            reducer(state, action: PayloadAction<Post>) {
-                state.posts.push(action.payload)
-            },
-            prepare(title: string, content: string) {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        title,
-                        content,
-                        created: new Date().toISOString(),
-                    },
-                }
-            },
-        },
         editPost(state, action: PayloadAction<Post>) {
             const postIndex = state.posts.findIndex(({ id }) => id === action.payload.id)
             if (postIndex === -1) return
@@ -45,7 +30,12 @@ export const postsSlice = createSlice({
                 state.status = 'failed'
                 state.error = action.error.message
             })
+            .addCase(addPost.fulfilled, (state, action) => {
+                state.posts.push(action.payload)
+            })
     },
 })
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => getPosts())
+
+export const addPost = createAsyncThunk('posts/addPost', async (data: Parameters<typeof addPostApi>[0]) => addPostApi(data))

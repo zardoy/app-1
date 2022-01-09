@@ -1,0 +1,16 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+@layer components {
+    .btn {
+        /* actually just a bootstrap style */
+        @apply px-3 py-2 border rounded;
+    }
+    .btn:disabled {
+        @apply opacity-70
+    }
+}
