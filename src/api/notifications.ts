@@ -1,5 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import faker from 'faker'
+import randomItem from 'random-item'
 import { getPosts } from './posts'
 
 export const getNotifications = () => {
@@ -9,9 +10,9 @@ export const getNotifications = () => {
     pastDate.setMinutes(pastDate.getMinutes() - 15)
 
     return Array.from({ length: 3 }, () => {
-        const post = posts[faker.datatype.number(posts.length - 1)]!
+        const post = randomItem(posts)
         const userActions = ['liked', 'removed', "didn't like", 'shared', 'reposted', 'created']
-        const message = `${faker.internet.userName()} ${userActions[faker.datatype.number(userActions.length - 1)]!} ${post.title}`
+        const message = `${faker.internet.userName()} ${randomItem(userActions)} ${post.title}`
 
         return {
             id: nanoid(),

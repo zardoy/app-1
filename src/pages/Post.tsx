@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { selectPostById } from '../redux/posts/slice'
 
 const Post: React.FC = () => {
     const { postId } = useParams<'postId'>()
-    const post = useSelector(state => state.posts.posts.find(({ id }) => id === postId!))
-    const [inEditMode, setInEditMode] = useState(false)
+    const post = useSelector(state => selectPostById(state, postId!))
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const [editingContent, setEditingContent] = useState(post?.content!)
+    const [inEditMode, setInEditMode] = useState(false)
 
     if (!post) return <div className="bg-[red]">Post not found.</div>
 

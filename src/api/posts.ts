@@ -1,26 +1,25 @@
-import faker from 'faker'
-import { sub } from 'date-fns'
 import delay from 'delay'
-import { nanoid } from '@reduxjs/toolkit'
+import randomItem from 'random-item'
+import { db, Post, PostDb } from '.'
 
-export const getPosts = () =>
-    Array.from({ length: 3 }, (_, i) => ({
-        id: i.toString(),
-        title: faker.lorem.words(),
-        content: faker.lorem.paragraphs(),
-        created: sub(new Date(), { hours: (5 - i) * 3 }).toISOString(),
-    }))
+// TODO!
+const serializePost = (post: PostDb): Post => ({ ...post, author: post.author!.username })
 
-export const fetchPosts = async () => {
-    await delay(1500)
-    return getPosts()
-}
+export const getPosts = () => db.post.getAll().map(serializePost)
 
-export const addPost = async (data: Record<'title' | 'content', string>) => {
-    await delay(1500)
-    return {
-        ...data,
-        id: nanoid(),
-        created: new Date().toISOString(),
-    }
+export const fetchPosts = async () =>
+    // await delay(500)
+    getPosts()
+
+export const addPost = async (data: Record<'title' | 'content', string>): Promise<Post> => {
+    await delay(1000)
+    // show result without serializePost
+    return serializePost(
+        db.post.create({
+            ...data,
+            author: randomItem(db.user.getAll()),
+            created: new Date().toISOString(),
+            likes: 0,
+        }),
+    )
 }

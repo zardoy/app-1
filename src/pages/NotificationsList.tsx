@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import PageContent from '../components/PageContent'
 import { fetchNotifications, notificationSlice, selectAllNotifications } from '../redux/notifications/slice'
 import { useAppDispatch } from '../redux/store'
 
@@ -24,7 +25,9 @@ const NotificationsList: React.FC = () => {
                     }}
                 >
                     {message.slice(0, postLinkRange[0])}
-                    <Link to={`/posts/${linkedPostId}`}>{message.slice(postLinkRange[0], postLinkRange[1])}</Link>
+                    <Link to={`/posts/${linkedPostId}`} className="text-blue-500">
+                        {message.slice(postLinkRange[0], postLinkRange[1])}
+                    </Link>
                     <p className="mt-3 italic">{formatDistanceToNow(new Date(date), { addSuffix: true })}</p>
                 </div>
             ))
@@ -33,7 +36,7 @@ const NotificationsList: React.FC = () => {
         )
 
     return (
-        <section className="flex flex-col items-center mx-auto">
+        <PageContent>
             <div className="w-max grid max-w-6xl">{content}</div>
             <div className="mt-5">
                 <button
@@ -55,7 +58,7 @@ const NotificationsList: React.FC = () => {
                     Read all notifications
                 </button>
             </div>
-        </section>
+        </PageContent>
     )
 }
 
