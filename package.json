@@ -37,6 +37,7 @@
         "@mswjs/data": "^0.8.4",
         "@reduxjs/toolkit": "^1.7.1",
         "@tailwindcss/typography": "^0.5.0",
+        "change-case": "^4.1.2",
         "classnames": "^2.3.1",
         "date-fns": "^2.28.0",
         "delay": "^5.0.0",
@@ -45,7 +46,8 @@
         "rambda": "^7.0.1",
         "random-item": "^4.0.1",
         "react-redux": "^7.2.6",
-        "react-router-dom": "^6.2.1"
+        "react-router-dom": "^6.2.1",
+        "title-case": "^3.0.3"
     },
     "prettier": {
         "semi": false,
