@@ -6,7 +6,7 @@ const usersAdapter = createEntityAdapter<User>()
 
 export const fetchUsers = createAsyncThunk('users', async () => api.users.getAll())
 
-export const { selectAll: selectAllUsers, selectEntities: selectUsers } = usersAdapter.getSelectors((state: DefaultRootState) => state.users)
+export const { selectAll: selectAllUsers, selectEntities: selectUsers } = usersAdapter.getSelectors<DefaultRootState>(state => state.users)
 
 export const usersSlice = createSlice({
     name: 'users',

@@ -14,7 +14,7 @@ export const {
     selectAll: selectAllPosts,
     selectById: selectPostById,
     selectIds: selectPostIds,
-} = postsAdapter.getSelectors((state: DefaultRootState) => state.posts)
+} = postsAdapter.getSelectors<DefaultRootState>(state => state.posts)
 
 export const selectPostsByUser = createSelector(
     //
