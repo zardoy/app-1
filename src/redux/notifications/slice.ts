@@ -1,10 +1,10 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DefaultRootState } from 'react-redux'
-import { getNotifications } from '../../api/notifications'
+import { api } from '../../api'
 
-export const fetchNotifications = createAsyncThunk('notifications', () => getNotifications())
+export const fetchNotifications = createAsyncThunk('notifications', async () => api.notifications.getAll())
 
-type Notification = ReturnType<typeof getNotifications>[0]
+type Notification = Awaited<ReturnType<typeof api.notifications.getAll>>[0]
 
 const notificationsAdapter = createEntityAdapter<Notification>({
     sortComparer: (a, b) => b.date.localeCompare(a.date),

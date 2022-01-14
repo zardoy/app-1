@@ -1,11 +1,10 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import { DefaultRootState } from 'react-redux'
-import { User } from '../../api'
-import { fetchUsers as fetchUsersApi } from '../../api/users'
+import { api, User } from '../../api'
 
 const usersAdapter = createEntityAdapter<User>()
 
-export const fetchUsers = createAsyncThunk('users', async () => fetchUsersApi())
+export const fetchUsers = createAsyncThunk('users', async () => api.users.getAll())
 
 export const { selectAll: selectAllUsers, selectEntities: selectUsers } = usersAdapter.getSelectors((state: DefaultRootState) => state.users)
 

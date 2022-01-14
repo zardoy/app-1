@@ -4,6 +4,10 @@ import { nanoid } from '@reduxjs/toolkit'
 import { sub } from 'date-fns'
 import faker from 'faker'
 import { range } from 'rambda'
+import delay from 'delay'
+import { postsInternalApi } from './posts'
+import { usersInternalApi } from './users'
+import { notificationsInternalApi } from './notifications'
 
 const USERS_COUNT = 5
 const POSTS_PER_USER = 3
@@ -55,3 +59,29 @@ for (const i of range(0, USERS_COUNT)) {
         })
 }
 // #endregion
+
+const delays = {
+    default: 500,
+    add: 1500,
+}
+
+// todo make type to ensure all methods are async
+const internalApi = {
+    posts: postsInternalApi,
+    users: usersInternalApi,
+    notifications: notificationsInternalApi,
+}
+export const api = Object.fromEntries(
+    Object.entries(internalApi).map(([key, internalApi]) => [
+        key,
+        new Proxy(internalApi, {
+            get(target, prop) {
+                return async (...args) => {
+                    // don't get bothered in dev
+                    if (!import.meta.env.DEV) await delay(delays[prop] ?? delays.default)
+                    return target[prop](...args)
+                }
+            },
+        }),
+    ]),
+) as typeof internalApi

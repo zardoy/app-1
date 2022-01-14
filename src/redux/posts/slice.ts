@@ -1,11 +1,10 @@
 import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DefaultRootState } from 'react-redux'
-import { Post } from '../../api'
-import { fetchPosts as fetchPostsApi, addPost as addPostApi } from '../../api/posts'
+import { api, Post } from '../../api'
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => fetchPostsApi())
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => api.posts.getAll())
 
-export const addPost = createAsyncThunk('posts/addPost', async (data: Parameters<typeof addPostApi>[0]) => addPostApi(data))
+export const addPost = createAsyncThunk('posts/addPost', async (data: Parameters<typeof api.posts.add>[0]) => api.posts.add(data))
 
 export const postsAdapter = createEntityAdapter<Post>({
     sortComparer: (a, b) => b.created.localeCompare(a.created),
