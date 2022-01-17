@@ -1,27 +1,35 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { mdiRefresh } from '@mdi/js'
+import Icon from '@mdi/react'
+import classNames from 'classnames'
+import React, { useMemo } from 'react'
 import PostPreview from '../components/PostPreview'
-import { fetchPosts, selectPostIds } from '../redux/posts/slice'
+import { useGetPostsQuery } from '../redux/apiSlice'
 
 const Posts: React.FC = () => {
-    const orderedPostsIds = useSelector(selectPostIds)
-    const dispatch = useDispatch()
-    const postsStatus = useSelector(state => state.posts.status)
-    const error = useSelector(state => state.posts.error)
+    const { data: posts = [], isLoading, isFetching, error, refetch } = useGetPostsQuery()
 
-    useEffect(() => {
-        if (postsStatus === 'idle') dispatch(fetchPosts())
-    }, [])
+    const orderedPosts = useMemo(() => [...posts].sort((a, b) => b.created.localeCompare(a.created)), [posts])
 
-    if (postsStatus === 'loading') return <span>Loading...</span>
-    if (postsStatus === 'failed') return <span>Error: {error}</span>
-    if (postsStatus === 'idle') return <div />
+    if (isLoading) return <span>Loading...</span>
+    if (error) return <span className="whitespace-pre">Error: {JSON.stringify(error, undefined, 4)}</span>
 
     return (
         <section>
-            {orderedPostsIds.map(postId => (
-                <PostPreview key={postId} {...{ postId }} />
-            ))}
+            <h2 className="text-4xl">
+                Posts{' '}
+                <button type="button" title="Refresh posts" onClick={refetch}>
+                    <Icon size="36px" className="inline-block" path={mdiRefresh} />
+                </button>
+            </h2>
+            <div
+                className={classNames('', {
+                    'opacity-60': isFetching,
+                })}
+            >
+                {orderedPosts.map(post => (
+                    <PostPreview key={post.id} {...{ post }} />
+                ))}
+            </div>
         </section>
     )
 }

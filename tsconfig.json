@@ -2,7 +2,7 @@
     "extends": "@zardoy/tsconfig/react",
     "compilerOptions": {
         "lib": ["dom", "esnext"],
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
     },
     "include": ["src"]
 }

@@ -10,6 +10,9 @@ import NewPost from './pages/NewPost'
 import NotificationsList from './pages/NotificationsList'
 import Users from './pages/Users'
 import User from './pages/User'
+import { extendedApiSlice } from './redux/users/slice'
+
+void store.dispatch(extendedApiSlice.endpoints.getUsers.initiate())
 
 const App: React.FC = () => (
     <Provider store={store}>

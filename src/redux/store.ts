@@ -1,15 +1,16 @@
-import { configureStore, createReducer, PayloadAction } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
+import { apiSlice } from './apiSlice'
 import { notificationSlice } from './notifications/slice'
-import { postsSlice } from './posts/slice'
-import { usersSlice } from './users/slice'
 
 const store = configureStore({
     reducer: {
-        posts: postsSlice.reducer,
         notifications: notificationSlice.reducer,
-        users: usersSlice.reducer,
+        // users: usersSlice.reducer,
+        [apiSlice.reducerPath]: apiSlice.reducer,
     },
+    // eslint-disable-next-line unicorn/prefer-spread
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(apiSlice.middleware),
 })
 
 declare module 'react-redux' {

@@ -1,34 +1,43 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { selectPostById } from '../redux/posts/slice'
+import { useEditPostMutation, useGetPostQuery } from '../redux/apiSlice'
 
 const Post: React.FC = () => {
-    const { postId } = useParams<'postId'>()
-    const post = useSelector(state => selectPostById(state, postId!))
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    const [editingContent, setEditingContent] = useState(post?.content!)
-    const [inEditMode, setInEditMode] = useState(false)
+    const { postId } = useParams() as { postId: string }
 
-    if (!post) return <div className="bg-[red]">Post not found.</div>
+    const { isFetching, error, data: post } = useGetPostQuery({ postId })
+
+    const [editPostMutation, { isLoading }] = useEditPostMutation()
+
+    const [editingContent, setEditingContent] = useState<string>()
+    const [inEditMode, setInEditMode] = useState(false)
+    useEffect(() => {
+        setEditingContent(post?.content)
+    }, [post])
+
+    if (isFetching) return <div>Loading...</div>
+    if (error) return null
+
+    if (!post) return <div className="text-[red]">Post not found.</div>
 
     return (
         <div>
             <h2>{post.title}</h2>
             {inEditMode ? (
-                <textarea className="border" value={editingContent} onChange={e => setEditingContent(e.target.value)} />
+                <textarea title="Post content" className="border" value={editingContent} onChange={e => setEditingContent(e.target.value)} />
             ) : (
                 <section className="border">{post.content}</section>
             )}
             <button
+                disabled={!editingContent || isLoading}
                 type="button"
-                onClick={() => {
-                    // if (inEditMode) dispatch(postsSlice.actions.editPost({ ...post, id: postId!, content: editingContent }))
+                onClick={async () => {
+                    if (inEditMode) await editPostMutation({ content: editingContent!, postId }).unwrap()
 
                     setInEditMode(s => !s)
                 }}
             >
-                {inEditMode ? 'Done' : 'Edit'}
+                {isLoading ? 'Sending' : inEditMode ? 'Done' : 'Edit'}
             </button>
         </div>
     )

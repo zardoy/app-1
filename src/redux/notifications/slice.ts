@@ -1,6 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DefaultRootState } from 'react-redux'
-import { api } from '../../api'
 
 export const fetchNotifications = createAsyncThunk('notifications', async () => api.notifications.getAll())
 
@@ -21,7 +20,7 @@ export const notificationSlice = createSlice({
             notification.isRead = true
         },
         readAllNotifications: state => {
-            for (const notification of Object.values(state.entities)) notification!.isRead = true
+            for (const notification of Object.values(state.entities)) notification.isRead = true
         },
     },
     extraReducers(builder) {

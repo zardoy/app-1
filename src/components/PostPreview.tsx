@@ -3,19 +3,13 @@ import React from 'react'
 import { Icon } from '@mdi/react'
 import { mdiHeart } from '@mdi/js'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { EntityId } from '@reduxjs/toolkit'
-import { postsSlice, selectPostById } from '../redux/posts/slice'
 import { useAppDispatch } from '../redux/store'
+import { Post } from '../api'
 
-type ComponentProps = { postId: EntityId }
+type ComponentProps = { post: Post }
 
-const PostPreview: React.FC<ComponentProps> = ({ postId }) => {
+const PostPreview: React.FC<ComponentProps> = ({ post: { author, content, created, id, likes, title } }) => {
     const dispatch = useAppDispatch()
-    const post = useSelector(state => selectPostById(state, postId))
-
-    if (!post) return null
-    const { content, created, id, likes, title, author } = post
 
     return (
         <div className="px-4 py-3 bg-white border-gray-600 rounded-lg shadow">
@@ -36,7 +30,7 @@ const PostPreview: React.FC<ComponentProps> = ({ postId }) => {
                         type="button"
                         aria-label="like"
                         onClick={() => {
-                            dispatch(postsSlice.actions.likePost({ id }))
+                            // dispatch(postsSlice.actions.likePost({ id }))
                         }}
                     >
                         <Icon size="24px" path={mdiHeart} className="hover:text-red-500 transition-colors" />

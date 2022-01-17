@@ -1,4 +1,5 @@
 import { Except, Simplify } from 'type-fest'
+import { rest, setupWorker } from 'msw'
 import { factory, manyOf, oneOf, primaryKey } from '@mswjs/data'
 import { nanoid } from '@reduxjs/toolkit'
 import { sub } from 'date-fns'
@@ -60,6 +61,7 @@ for (const i of range(0, USERS_COUNT)) {
 }
 // #endregion
 
+// #region Define API
 const delays = {
     default: 500,
     add: 1500,
@@ -71,17 +73,47 @@ const internalApi = {
     users: usersInternalApi,
     notifications: notificationsInternalApi,
 }
-export const api = Object.fromEntries(
+const api = Object.fromEntries(
     Object.entries(internalApi).map(([key, internalApi]) => [
         key,
         new Proxy(internalApi, {
             get(target, prop) {
                 return async (...args) => {
                     // don't get bothered in dev
-                    if (!import.meta.env.DEV) await delay(delays[prop] ?? delays.default)
+                    if (!import.meta.env.DEV || localStorage.getItem('PROD')) await delay(delays[prop] ?? delays.default)
                     return target[prop](...args)
                 }
             },
         }),
     ]),
 ) as typeof internalApi
+// #endregion
+
+const worker = setupWorker(
+    rest.get('/fakeApi/posts', async (_req, res, ctx) => res(ctx.json(await api.posts.getAll()))),
+    rest.post('/fakeApi/posts', async (req, res, ctx) => {
+        const data = req.body as any
+        if (data.content === 'error') return res(ctx.delay(500), ctx.status(500), ctx.json('Server error saving this post!'))
+        return res(ctx.json(await api.posts.add(data)))
+    }),
+    rest.patch('/fakeApi/posts/:postId', async (req, res, ctx) => {
+        const data = req.body as any
+        db.post.update({
+            where: {
+                id: {
+                    equals: req.params.postId as string,
+                },
+            },
+            data: {
+                content: data.content,
+            },
+        })
+        return res()
+    }),
+    rest.get('/fakeApi/posts/:postId', async (req, res, ctx) => res(ctx.json(await api.posts.get(req.params.postId as string)) as any)),
+    rest.get('/fakeApi/users', async (req, res, ctx) => res(ctx.json(await api.users.getAll()))),
+    rest.get('/fakeApi/notifications', async (req, res, ctx) => res(ctx.json(await api.notifications.refresh()))),
+)
+
+// thats where we take advantage of ESM
+await worker.start()

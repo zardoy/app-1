@@ -4,7 +4,7 @@ import randomItem from 'random-item'
 import { getPosts } from './posts'
 
 export const notificationsInternalApi = {
-    async getAll() {
+    async refresh() {
         const posts = getPosts()
 
         const pastDate = new Date()

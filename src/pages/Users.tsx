@@ -3,20 +3,12 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PageContent from '../components/PageContent'
 import { useAppDispatch } from '../redux/store'
-import { fetchUsers, selectAllUsers } from '../redux/users/slice'
+import { selectAllUsers } from '../redux/users/slice'
 
 const Users: React.FC = () => {
     const users = useSelector(selectAllUsers)
-    const [isLoading, setisLoading] = useState(true)
+    const [isLoading, setisLoading] = useState(false)
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        ;(async () => {
-            await dispatch(fetchUsers())
-                .unwrap()
-                .finally(() => setisLoading(false))
-        })()
-    }, [])
 
     return (
         <PageContent>
